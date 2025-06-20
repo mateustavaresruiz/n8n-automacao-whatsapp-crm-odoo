@@ -18,28 +18,6 @@ Este fluxo do **n8n** automatiza o registro de informações recebidas por mensa
 
 ---
 
-## Estrutura Detalhada
-
-### 1. Webhook
-
-Recebe mensagens do WhatsApp via `POST`. O número do WhatsApp do remetente é usado como identificador único.
-
----
-
-### 2. Filtro de Mensagens
-
-Permite apenas mensagens do tipo texto continuarem no fluxo.
-
----
-
-### 3. Interpretação com GPT-4.1
-
-Identifica se a mensagem contém nome, telefone, e-mail ou endereço.
-
-**Prompt usado:**
-
-
-
 (Infelizmente não consigo compartilhar o projeto pois estou usando o plano gratuito. Com os códigos fornecidos fica muito fácil de copiar)
 ![image](https://github.com/user-attachments/assets/cd9f427d-6931-424f-8fd1-553a2679e644)
 
