@@ -39,6 +39,7 @@ telefone:
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Formatar número de WhatsApp:
+
 const raw = $('Webhook').first().json.body.data.key.remoteJid;
 const phone = raw.replace('@s.whatsapp.net', '');
 return [{ json: { phone } }];
@@ -67,6 +68,7 @@ return [
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Verifica se os campos no sheets:
+
 const item = items[0].json;
 
 const camposObrigatorios = ['Telefone', 'Nome', 'Email', 'Endereco'];
