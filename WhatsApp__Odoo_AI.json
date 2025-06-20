@@ -1,0 +1,542 @@
+{
+  "name": "WhatsApp  Odoo AI",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "1f4d12bd-c45d-4dde-8534-cc63bd8f6b44",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        -40
+      ],
+      "id": "7d9aacc2-ff1b-4680-96f7-68bc5a9d09d1",
+      "name": "Webhook",
+      "webhookId": "1f4d12bd-c45d-4dde-8534-cc63bd8f6b44"
+    },
+    {
+      "parameters": {
+        "jsCode": "const [entrada1, entrada2] = items;\n\nfunction preencherSeVazio(orig, novo) {\n  return (!orig || orig === \"\") && novo ? novo : orig;\n}\n\nreturn [\n  {\n    json: {\n      número_da_linha: entrada1.json[\"número_da_linha\"],\n      Nome: preencherSeVazio(entrada1.json[\"Nome\"], entrada2.json[\"Nome\"]),\n      Email: preencherSeVazio(entrada1.json[\"Email\"], entrada2.json[\"Email\"]),\n      Endereco: preencherSeVazio(entrada1.json[\"Endereco\"], entrada2.json[\"Endereco\"]),\n      Telefone: preencherSeVazio(entrada1.json[\"Telefone\"], entrada2.json[\"Telefone\"])\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        -40
+      ],
+      "id": "92ce9810-35fa-4316-8b09-5e9edcc6e4e5",
+      "name": "Unifica JSON"
+    },
+    {
+      "parameters": {
+        "resource": "opportunity",
+        "opportunityName": "={{ $json.Nome }}",
+        "additionalFields": {
+          "email_from": "={{ $json.Email }}",
+          "description": "=Região: {{ $json.Endereco }}",
+          "phone": "={{ $json.Telefone }}"
+        }
+      },
+      "type": "n8n-nodes-base.odoo",
+      "typeVersion": 1,
+      "position": [
+        700,
+        -40
+      ],
+      "id": "f4a7f120-52cc-4d47-8b29-1103400b649d",
+      "name": "Cria contato no CRM",
+      "credentials": {
+        "odooApi": {
+          "id": "cBlioOtU6Uhaz7vz",
+          "name": "Odoo - Infinity Extreme"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        280
+      ],
+      "id": "4b2036e3-9e82-4396-8005-4941ce747c95",
+      "name": "GPT 4.1-nano",
+      "credentials": {
+        "openAiApi": {
+          "id": "eG6E1KbjRzhiZDgP",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $('Webhook').first().json.body.data.key.remoteJid;\nconst phone = raw.replace('@s.whatsapp.net', '');\n\nreturn [{ json: { phone } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        60
+      ],
+      "id": "0a3d0214-2fa4-4b19-87c9-6d647e6b2181",
+      "name": "Formata Número WhatsApp 2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $('Webhook').first().json.body.data.key.remoteJid;\nconst phone = raw.replace('@s.whatsapp.net', '');\n\nreturn [{ json: { phone } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        -140
+      ],
+      "id": "2a9fc964-b13b-4ea0-a9c1-b3510b3d6524",
+      "name": "Formata Número WhatsApp"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8",
+          "mode": "list",
+          "cachedResultName": "Automação WhatsApp Odoo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Telefone": "={{ $json.phone }}"
+          },
+          "matchingColumns": [
+            "Telefone"
+          ],
+          "schema": [
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Endereco",
+              "displayName": "Endereco",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -540,
+        -140
+      ],
+      "id": "5b715bc9-6d64-4f76-ae43-8677a7719912",
+      "name": "Cria Linha",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Fo3liWgLQ1nNh8KF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8",
+          "mode": "list",
+          "cachedResultName": "Automação WhatsApp Odoo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Telefone",
+              "lookupValue": "={{ $json.Telefone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -280,
+        -140
+      ],
+      "id": "b954ce8a-31e8-4479-9ec4-84600d462f1d",
+      "name": "Coleta Linha",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Fo3liWgLQ1nNh8KF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "Endereço",
+              "field2": "Telefone"
+            }
+          ]
+        },
+        "joinMode": "keepNonMatches",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -20,
+        -40
+      ],
+      "id": "d1351de5-90eb-4abf-8d0f-38212af4e618",
+      "name": "Unifica Sheets + IA"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8",
+          "mode": "list",
+          "cachedResultName": "Automação WhatsApp Odoo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oyAxKj1Dv84dTNoBvDjm2qlt0kQXDq4VQ5eqKIoygI8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Telefone": "={{ $json.Telefone }}",
+            "Nome": "={{ $json.Nome }}",
+            "Email": "={{ $json.Email }}",
+            "Endereco": "={{ $json.Endereco }}"
+          },
+          "matchingColumns": [
+            "Telefone"
+          ],
+          "schema": [
+            {
+              "id": "Telefone",
+              "displayName": "Telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nome",
+              "displayName": "Nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Endereco",
+              "displayName": "Endereco",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        340,
+        -40
+      ],
+      "id": "069647c5-51a2-45b3-a65c-e4f10145b821",
+      "name": "Insere os Valores",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Fo3liWgLQ1nNh8KF",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = items[0].json;\n\nconst camposObrigatorios = ['Telefone', 'Nome', 'Email', 'Endereco'];\nconst linhaCompleta = camposObrigatorios.every(campo => item[campo] && item[campo].toString().trim() !== \"\");\n\nif (linhaCompleta) {\n  return [ { json: item } ]; // Continua para o próximo nó\n} else {\n  return []; // Impede envio ao Odoo\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        -40
+      ],
+      "id": "cbbbe078-18c9-4b1f-a379-3109b5bc90be",
+      "name": "Verifica os Campos no Sheets"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawOutput = $('Filtra Mensagens Recebidas').first().json.output;\n\n  const data = JSON.parse(rawOutput);\n\n  return [\n    {\n      json: {\n        Nome: data.nome ?? '',\n        Email: data.email ?? '',\n        Endereco: data.endereco ?? '',\n        Telefone: $input.first().json.phone\n      }\n    }\n  ];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -280,
+        60
+      ],
+      "id": "b5912c61-13f6-4d99-b73a-f4516077d551",
+      "name": "Separador JSON"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analise a seguinte mensagem de WhatsApp e diga se ela contém alguma das seguintes informações: nome completo, email, telefone, endereço. Responda em JSON com as chaves exatamente assim: \"nome\", \"email\", \"endereco\", \"telefone\".\nO endereço pode ser região como apenas o estado por exemplo ou lista de cidades, dependendo do que cada usuário mandar, pode ser variado e diversos sentidos, fique atento a isso.\n\nSe não contiver uma informação, retorne null para o campo.\n\nMensagem: \ntelefone: \n{{ $json.body.data.message.conversation }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        60
+      ],
+      "id": "ad6b868a-311d-4806-ac9e-a7864c635f58",
+      "name": "Filtra Mensagens Recebidas"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Formata Número WhatsApp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filtra Mensagens Recebidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unifica JSON": {
+      "main": [
+        [
+          {
+            "node": "Insere os Valores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 4.1-nano": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Filtra Mensagens Recebidas",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata Número WhatsApp 2": {
+      "main": [
+        [
+          {
+            "node": "Separador JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata Número WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Cria Linha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cria Linha": {
+      "main": [
+        [
+          {
+            "node": "Coleta Linha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coleta Linha": {
+      "main": [
+        [
+          {
+            "node": "Unifica Sheets + IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unifica Sheets + IA": {
+      "main": [
+        [
+          {
+            "node": "Unifica JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insere os Valores": {
+      "main": [
+        [
+          {
+            "node": "Verifica os Campos no Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica os Campos no Sheets": {
+      "main": [
+        [
+          {
+            "node": "Cria contato no CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separador JSON": {
+      "main": [
+        [
+          {
+            "node": "Unifica Sheets + IA",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Filtra Mensagens Recebidas": {
+      "main": [
+        [
+          {
+            "node": "Formata Número WhatsApp 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8dff0b92-bcad-4b80-8238-516ff6fa2791",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7f149b3d554ee78130c1560da231cbc10d81008119631e93e066a86fb24d77a2"
+  },
+  "id": "UwOzjKL5DgZkS5Bq",
+  "tags": []
+}
