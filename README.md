@@ -1,57 +1,44 @@
-# n8n-automacao-whatsapp-crm-odoo
-Automação feita no n8n que salva informações personalizadas da conversa do whatsapp como nome completo, endereço, número e email no CRM da ferramenta Odoo. O legal que pode ser qualquer tipo de informação que esteja na conversa pode ser salvo apenas ajustar no prompt da IA e na coluna do Sheets.
+# Automação WhatsApp + Google Sheets + CRM Odoo (n8n)
 
-1. 🔗 Webhook
-Recebe os dados do WhatsApp via requisição POST.
+Este fluxo do **n8n** automatiza o registro de informações recebidas por mensagens de WhatsApp, interpretando os dados com ajuda de IA e salvando-os de forma organizada no **Google Sheets**, além de criar contatos automaticamente no **CRM Odoo**.
 
-Cada usuário é identificado pelo número de telefone (ID).
+---
 
-2. 🧹 Filtra Mensagens Recebidas
-Apenas mensagens relevantes (texto) são processadas.
+## Visão Geral do Fluxo
 
-Exclui áudios, imagens e outros tipos de mídia.
+1. Recebimento de mensagens do WhatsApp por meio de um webhook.
+2. Filtragem de mensagens de texto.
+3. Uso de IA para identificar dados úteis: nome, telefone, e-mail e endereço.
+4. Formatação do número de WhatsApp para uso como identificador.
+5. Verificação no Google Sheets se o contato já existe.
+6. Criação ou atualização da linha no Sheets com os dados extraídos.
+7. Unificação dos dados antigos com os novos.
+8. Verificação de campos obrigatórios antes do envio ao CRM.
+9. Criação de contato no CRM Odoo.
 
-3. 🤖 GPT 4.1-nano (IA)
-A IA analisa o conteúdo textual da mensagem.
+---
 
-O prompt foi treinado para identificar:
+## Estrutura Detalhada
 
-Nome completo, Endereço, Telefone, E-mail
+### 1. Webhook
 
-Se a mensagem contiver uma dessas informações, ela é transformada em um JSON.
+Recebe mensagens do WhatsApp via `POST`. O número do WhatsApp do remetente é usado como identificador único.
 
-4. 🧪 Formata Número WhatsApp + Separador JSON
-Garante que o número do usuário esteja formatado corretamente.
+---
 
-Divide e organiza o JSON para os próximos passos.
+### 2. Filtro de Mensagens
 
-5. 📄 Cria Linha / Coleta Linha (Google Sheets)
-Cria Linha: se o número do WhatsApp (ID) ainda não estiver presente, cria uma nova linha no Google Sheets.
+Permite apenas mensagens do tipo texto continuarem no fluxo.
 
-Coleta Linha: busca os dados existentes para este ID e prepara para fusão.
+---
 
-6. 🔄 Unifica Sheets + IA
-Junta os dados antigos do usuário com as novas informações coletadas pela IA.
+### 3. Interpretação com GPT-4.1
 
-Garante que apenas campos novos sejam adicionados e que nada existente seja sobrescrito.
+Identifica se a mensagem contém nome, telefone, e-mail ou endereço.
 
-7. 🧱 Unifica JSON
-Reestrutura os dados combinados em um JSON unificado, compatível com o formato do Sheets.
+**Prompt usado:**
 
-8. ✍️ Insere os Valores (Google Sheets)
-Atualiza a linha do usuário com as informações novas.
 
-Evita duplicações e garante consistência no banco de dados.
-
-9. 🔍 Verifica os Campos no Sheets
-Confere se todos os campos essenciais (nome, e-mail etc.) estão preenchidos.
-
-Essa etapa previne o envio incompleto para o CRM.
-
-10. 🧾 Cria Contato no CRM (Odoo)
-Se todos os dados necessários estiverem presentes, cria (ou atualiza) o contato no CRM.
-
-A ação no Odoo é: create: opportunity.
 
 (Infelizmente não consigo compartilhar o projeto pois estou usando o plano gratuito. Com os códigos fornecidos fica muito fácil de copiar)
 ![image](https://github.com/user-attachments/assets/cd9f427d-6931-424f-8fd1-553a2679e644)
