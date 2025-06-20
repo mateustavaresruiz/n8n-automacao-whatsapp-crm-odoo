@@ -3,13 +3,12 @@
 Este fluxo do **n8n** automatiza o registro de informações recebidas por mensagens de WhatsApp, interpretando os dados com ajuda de IA e salvando-os de forma organizada no **Google Sheets**, além de criar contatos automaticamente no **CRM Odoo**.
 O mais legal é que você pode personalizar para a IA filtrar qualquer tipo de mensagem e trabalhar de que forma quiser basta adaptar, no meu caso usei para adicionar contatos no Odoo. (Infelizmente não consigo compartilhar o projeto pois estou usando o plano gratuito. Com os códigos fornecidos fica muito fácil de copiar)
 
----
 
 Integrações feitas: 
 Evolution API: Para receber mensagens do Whatsapp diretamente no meu fluxo atráves de um Webhhok.
 Google Outh2: Para conectar o google drive com o n8n.
 Odoo API: Para criar contatos no CRM.
----
+
 
 ## Visão Geral do Fluxo
 
