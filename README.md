@@ -5,8 +5,8 @@ O mais legal é que você pode personalizar para a IA filtrar qualquer tipo de m
 
 
 Integrações feitas: 
-Evolution API: Para receber mensagens do Whatsapp diretamente no meu fluxo atráves de um Webhhok.
-Google Outh2: Para conectar o google drive com o n8n.
+Evolution API: Para receber mensagens do Whatsapp diretamente no meu fluxo atráves de um Webhhok. <br>
+Google Outh2: Para conectar o google drive com o n8n.<br>
 Odoo API: Para criar contatos no CRM.
 
 
